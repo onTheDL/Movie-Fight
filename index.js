@@ -12,17 +12,7 @@ const fetchData = async (query) => {
 
 const input = document.querySelector("input");
 
-let timeoutId;
 const onInput = (e) => {
-  /*
-  if(timeoutId) {
-    clearTimeout(timeouteId)
-  }
-  */
-
-  timeoutId && clearTimeout(timeoutId)
-  timeoutId = setTimeout(() => {
-    fetchData(e.target.value);
-  }, 500);
+  fetchData(e.target.value)
 };
-input.addEventListener("input", onInput);
+input.addEventListener("input", debounce(onInput, 500));
