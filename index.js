@@ -45,8 +45,19 @@ const onInput = async (e) => {
     `;
     resultsWrapper.appendChild(option);
   }
+  if (!movies.length) {
+    dropdown.classList.remove('is-active')
+    return;
+  }
 };
 input.addEventListener("input", debounce(onInput, 500));
+
+document.addEventListener("click", e => {
+  if (!root.contains(e.target)) {
+    dropdown.classList.remove('is-active')
+  }
+})
+
 
 /*
 <div class="dropdown is-active">
