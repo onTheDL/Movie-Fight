@@ -43,6 +43,15 @@ const onInput = async (e) => {
       <img src="${imgSrc}" />
       ${movie.Title}
     `;
+      
+    option.addEventListener('click', () => {
+      //match input value with selection
+      input.value = movie.Title
+
+      //close dropdown widget
+      dropdown.classList.remove('is-active')
+    });
+
     resultsWrapper.appendChild(option);
   }
   if (!movies.length) {
@@ -57,18 +66,3 @@ document.addEventListener("click", e => {
     dropdown.classList.remove('is-active')
   }
 })
-
-
-/*
-<div class="dropdown is-active">
-        <input />
-        <div class="dropdown-menu">
-          <div class="dropdown-content">
-            <a class="dropdown-item">Movie 1</a>
-            <a class="dropdown-item">Movie 2</a>
-            <a class="dropdown-item">Movie 3</a>
-          </div>
-        </div>
-      </div>
-      <div id="target"></div>
-*/
