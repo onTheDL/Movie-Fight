@@ -1,3 +1,5 @@
+
+
 const debounce = (func, delay = 1000) => {
   let timeoutId;
 
@@ -15,3 +17,13 @@ const debounce = (func, delay = 1000) => {
     return timeoutId;
   };
 };
+
+// const fetchMovieDetails = async (query) => {
+//   const res = await axios.get("http://www.omdbapi.com/", {
+//     params: {
+//       apikey: API_KEY,
+//       d: query,
+//     },
+//   });
+// }
+
