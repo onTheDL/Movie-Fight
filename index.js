@@ -14,63 +14,15 @@ const fetchData = async (query) => {
   return res.data.Search;
 };
 
-const root = document.querySelector(".autocomplete");
-root.innerHTML = `
-  <label><b>Search for a Movie</b></label>
-  <input class="input" />
-  <div class="dropdown">
-    <div class="dropdown-menu">
-      <div class="dropdown-content results"></div>
-    </div>
-  </div>
-`;
-
-const input = document.querySelector(".input");
-const dropdown = document.querySelector(".dropdown");
-const resultsWrapper = document.querySelector(".results");
-
-const onInput = async (e) => {
-  const movies = await fetchData(e.target.value);
-
-  resultsWrapper.innerHTML = "";
-  dropdown.classList.add("is-active");
-  for (let movie of movies) {
-    const option = document.createElement("a");
-    const imgSrc = movie.Poster === "N/A" ? "" : movie.Poster;
-
-    option.classList.add("dropdown-item");
-    option.innerHTML = `
-      <img src="${imgSrc}" />
-      ${movie.Title}
-    `;
-
-    option.addEventListener("click", () => {
-      //match input value with selection
-      input.value = movie.Title;
-
-      //close dropdown widget
-      dropdown.classList.remove("is-active");
-
-      //fetch movie id
-      onMovieSelect(movie.imdbID);
-
-      //render data
-    });
-
-    resultsWrapper.appendChild(option);
-  }
-  if (!movies.length) {
-    dropdown.classList.remove("is-active");
-    return;
-  }
-};
-input.addEventListener("input", debounce(onInput, 500));
-
-document.addEventListener("click", (e) => {
-  if (!root.contains(e.target)) {
-    dropdown.classList.remove("is-active");
-  }
-});
+createAutoComplete({
+  root: document.querySelector('.autocomplete'),
+})
+createAutoComplete({
+  root: document.querySelector('.autocomplete-two'),
+})
+createAutoComplete({
+  root: document.querySelector('.autocomplete-three'),
+})
 
 const onMovieSelect = async (id) => {
   const res = await axios.get("http://www.omdbapi.com/", {
@@ -79,11 +31,12 @@ const onMovieSelect = async (id) => {
       i: id,
     },
   });
+  console.log(res.data);
   document.querySelector("#summary").innerHTML = movieTemplate(res.data)
 };
 
 const movieTemplate = (movieData) => {
-  const { Title, Poster, Genre, Plot, } = movieData;
+  const { Title, Poster, Genre, Plot, Awards, BoxOffice, Metascore, imdbRating, imdbVotes, } = movieData;
   return `
     <article class="media">
       <figure class="media-left">
@@ -99,6 +52,30 @@ const movieTemplate = (movieData) => {
         </div>
       </div>
     </article>
+
+    <article class="notification is-primary">
+      <p class="title">${Awards}</p>
+      <p class="subtitle">Awards</p>
+    </article>
+
+    <article class="notification is-primary">
+      <p class="title">${BoxOffice}</p>
+      <p class="subtitle">Box Office</p>
+    </article>
+    <article class="notification is-primary">
+      <p class="title">${Metascore}</p>
+      <p class="subtitle">Metascore</p>
+    </article>
+    <article class="notification is-primary">
+      <p class="title">${imdbRating}</p>
+      <p class="subtitle">IMDB Rating</p>
+    </article>
+    <article class="notification is-primary">
+      <p class="title">${imdbVotes}</p>
+      <p class="subtitle">IMDB Votes</p>
+    </article>
+    
+    
 
   `;
 };
