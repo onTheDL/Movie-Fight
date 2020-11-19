@@ -1,7 +1,14 @@
+// file contains reusable code
 
-const createAutoComplete = ({ root }) => {
+const createAutoComplete = ({
+  root,
+  renderOption,
+  onOptionSelect,
+  inputValue,
+  fetchData
+}) => {
   root.innerHTML = `
-    <label><b>Search for a Movie</b></label>
+    <label><b>Search</b></label>
     <input class="input" />
     <div class="dropdown">
       <div class="dropdown-menu">
@@ -15,36 +22,32 @@ const createAutoComplete = ({ root }) => {
   const resultsWrapper = root.querySelector(".results");
 
   const onInput = async (e) => {
-    const movies = await fetchData(e.target.value);
+    const items = await fetchData(e.target.value);
 
     resultsWrapper.innerHTML = "";
     dropdown.classList.add("is-active");
-    for (let movie of movies) {
+
+    for (let item of items) {
       const option = document.createElement("a");
-      const imgSrc = movie.Poster === "N/A" ? "" : movie.Poster;
+      const imgSrc = item.Poster === "N/A" ? "" : item.Poster;
 
       option.classList.add("dropdown-item");
-      option.innerHTML = `
-      <img src="${imgSrc}" />
-      ${movie.Title}
-    `;
+      option.innerHTML = renderOption(item);
 
       option.addEventListener("click", () => {
         //match input value with selection
-        input.value = movie.Title;
+        input.value = inputValue(item);
 
         //close dropdown widget
         dropdown.classList.remove("is-active");
 
-        //fetch movie id
-        onMovieSelect(movie.imdbID);
-
-        //render data
+        //fetch object id
+        onOptionSelect(item);
       });
-
+      //render data
       resultsWrapper.appendChild(option);
     }
-    if (!movies.length) {
+    if (!items.length) {
       dropdown.classList.remove("is-active");
       return;
     }

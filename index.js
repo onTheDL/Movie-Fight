@@ -1,27 +1,36 @@
+//file contains application specific code
+
 const API_KEY = "7bce51db";
 
-const fetchData = async (query) => {
-  const res = await axios.get("http://www.omdbapi.com/", {
-    params: {
-      apikey: API_KEY,
-      s: query,
-    },
-  });
-
-  if (res.data.Error) {
-    return [];
-  }
-  return res.data.Search;
-};
-
+//helper function specific to this application
 createAutoComplete({
   root: document.querySelector('.autocomplete'),
-})
-createAutoComplete({
-  root: document.querySelector('.autocomplete-two'),
-})
-createAutoComplete({
-  root: document.querySelector('.autocomplete-three'),
+  renderOption(movie) {
+    const imgSrc = movie.Poster === "N/A" ? "" : movie.Poster;
+    return `
+      <img src="${imgSrc}" />
+      ${movie.Title} (${movie.Year})
+    `;
+  },
+  onOptionSelect(movie) {
+    onMovieSelect(movie.imdbID)
+  },
+  inputValue(movie) {
+    return movie.Title
+  },
+  async fetchData(query) {
+    const res = await axios.get("http://www.omdbapi.com/", {
+      params: {
+        apikey: API_KEY,
+        s: query,
+      },
+    });
+  
+    if (res.data.Error) {
+      return [];
+    }
+    return res.data.Search;
+  },
 })
 
 const onMovieSelect = async (id) => {
@@ -41,7 +50,7 @@ const movieTemplate = (movieData) => {
     <article class="media">
       <figure class="media-left">
         <p class="image">
-          <img src="${Poster ? Poster : ''}" />
+        ${(Poster !== 'N/A' || !Poster) ? `<img src=${Poster} />`: ''}
         </p>
       </figure>
       <div class="media-content">
@@ -59,7 +68,7 @@ const movieTemplate = (movieData) => {
     </article>
 
     <article class="notification is-primary">
-      <p class="title">${BoxOffice}</p>
+      <p class="title">${BoxOffice ? BoxOffice : 'N/A'}</p>
       <p class="subtitle">Box Office</p>
     </article>
     <article class="notification is-primary">
@@ -74,8 +83,5 @@ const movieTemplate = (movieData) => {
       <p class="title">${imdbVotes}</p>
       <p class="subtitle">IMDB Votes</p>
     </article>
-    
-    
-
   `;
 };
