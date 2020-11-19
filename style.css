@@ -1,4 +1,34 @@
 /* @import 'bulma/css/bulma.css'; */
+html {
+  background-color: rgb(12, 12, 12);
+}
+
+.container {
+  color: rgb(224, 222, 217);
+}
+.hero.is-primary.is-bold {
+  background-image: linear-gradient(110deg,#2A251B 0%,#cfbf7f 75%,#0D0B09 100%);
+}
+
+.notification.is-primary {
+  background-image: linear-gradient(110deg,#2A251B 0%,#998c5d 50%,#554E36 80%);
+  color: #fff;
+}
+article.notification.is-primary {
+  background-image: linear-gradient(90deg, #61593b 0%, #AB9D68 55%, #61593b 100%);
+  color: #fff;
+}
+div.content {
+  color: white;
+}
+
+div.content h1 {
+  color: white;
+}
+
+div.content h4 {
+  color: white;
+}
 
 .tutorial {
   width: 600px;

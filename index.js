@@ -1,19 +1,13 @@
 //file contains application specific code
-
 const API_KEY = "7bce51db";
 
-//helper function specific to this application
-createAutoComplete({
-  root: document.querySelector('.autocomplete'),
+const autoCompleteConfig = {
   renderOption(movie) {
     const imgSrc = movie.Poster === "N/A" ? "" : movie.Poster;
     return `
       <img src="${imgSrc}" />
       ${movie.Title} (${movie.Year})
     `;
-  },
-  onOptionSelect(movie) {
-    onMovieSelect(movie.imdbID)
   },
   inputValue(movie) {
     return movie.Title
@@ -31,18 +25,69 @@ createAutoComplete({
     }
     return res.data.Search;
   },
+}
+
+// Left Side
+createAutoComplete({
+  ...autoCompleteConfig,
+
+  root: document.querySelector('#left-autocomplete'),
+
+  onOptionSelect(movie) {
+    onMovieSelect(
+      movie.imdbID,
+      document.querySelector('#left-summary'),
+      'left',
+    );
+
+    document.querySelector('.tutorial').classList.add('is-hidden');
+  },
 })
 
-const onMovieSelect = async (id) => {
+// Right Side
+createAutoComplete({
+  ...autoCompleteConfig,
+
+  root: document.querySelector('#right-autocomplete'),
+
+  onOptionSelect(movie) {
+    onMovieSelect(
+      movie.imdbID,
+      document.querySelector('#right-summary'),
+      'right',
+    );
+    document.querySelector('.tutorial').classList.add('is-hidden');
+  },
+})
+
+let leftMovie;
+let rightMovie;
+const onMovieSelect = async (movieID, synopsisTarget, side) => {
   const res = await axios.get("http://www.omdbapi.com/", {
     params: {
       apikey: API_KEY,
-      i: id,
+      i: movieID,
     },
   });
   console.log(res.data);
-  document.querySelector("#summary").innerHTML = movieTemplate(res.data)
+
+  synopsisTarget.innerHTML = movieTemplate(res.data)
+
+  if (side === 'left') {
+    leftMovie = res.data
+  } else {
+    rightMovie = res.data
+  }
+
+  if (leftMovie && rightMovie) {
+    runComparison()
+  }
 };
+
+const runComparison = () => {
+  console.log('Time for comparison');
+}
+
 
 const movieTemplate = (movieData) => {
   const { Title, Poster, Genre, Plot, Awards, BoxOffice, Metascore, imdbRating, imdbVotes, } = movieData;
