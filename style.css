@@ -7,7 +7,7 @@ html {
   color: rgb(224, 222, 217);
 }
 .hero.is-primary.is-bold {
-  background-image: linear-gradient(110deg,#2A251B 0%,#cfbf7f 75%,#0D0B09 100%);
+  background-image: linear-gradient(110deg,#2A251B 0%,#c7b87a 60%,#2A251B 100%);
 }
 
 .notification.is-primary {
