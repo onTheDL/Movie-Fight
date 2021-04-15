@@ -1,4 +1,4 @@
-// helper fxn => ~ async
+// helper fxn
 const waitFor = (selector) => {
   return new Promise((resolve, reject) => {
     const interval = setInterval(() => {
